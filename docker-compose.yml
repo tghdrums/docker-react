@@ -1,0 +1,21 @@
+version: '3'                        # docker-compose version?
+services:                           # the service is what the container is providing?
+  web:                              # A web frontend container. docker ps will show "frontend-web".
+    container_name: web             # Can use this parameter to avoid finding the image ID. Easier!
+    build:                          # Normally build is . because it knows to find "Dockerfile".
+      context: .                    # Since we're not using standard Dockerfile, look in current
+      dockerfile: Dockerfile.dev    # working directory for dockerfile.dev which is what we are using.
+    ports:
+      - "3000:3000"                 # incoming (localhost) : outgoing (container)
+    volumes:
+      - /home/node/app/node_modules
+      - .:/home/node/app                      # copy from my local working dir (.) to /app dir in container
+  tests:                            # this is a 2nd container for running tests: "frontend-tests".
+    container_name: tests           # Can use this parameter to avoid finding the image ID. Easier!
+    build:                          # Use the same build parameters as above except for ports since
+      context: .                    # we don't need to see this on the web.
+      dockerfile: Dockerfile.dev
+    volumes:
+      - /home/node/app/node_modules
+      - .:/app
+    command: ["npm", "run", "test"]   # commands for running tests?
