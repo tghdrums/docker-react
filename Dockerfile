@@ -18,5 +18,5 @@ RUN npm run build
 
 # This is the start of the second (run) phase
 FROM nginx
-
+EXPOSE 80
 COPY --from=builder /app/build /usr/share/nginx/html
